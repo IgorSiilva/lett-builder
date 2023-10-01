@@ -24,21 +24,19 @@ jobs:
         id: read-json
         run: |
           json_content=$(cat repositories.json)
-          echo "::set-output name=json_content::$json_content"
-
+          echo "{repositories}={json_content}" >> $GITHUB_STATE
       
       - name: Searching for Terraform Repo 🔎
         id: find-terraform-repo
         run: |
-          json_data=${{ steps.read-json.outputs.json_content }}
           tag_to_find="${{ github.event.client_payload.tags.team }}"
 
-          echo ${json_data}
+          echo ${repositories}
           echo ${tag_to_find}
 
           repo=""
 
-          for row in $(echo "${json_data}" | jq -r '.[] | @base64'); do
+          for row in $(echo "${repositories}" | jq -r '.[] | @base64'); do
             _jq() {
               echo ${row} | base64 --decode | jq -r ${1}
             }
