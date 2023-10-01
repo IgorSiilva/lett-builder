@@ -33,6 +33,9 @@ jobs:
           json_data=${{ steps.read-json.outputs.json_content }}
           tag_to_find="${{ github.event.client_payload.tags.team }}"
 
+          echo ${json_data}
+          echo ${tag_to_find}
+
           repo=""
 
           for row in $(echo "${json_data}" | jq -r '.[] | @base64'); do
