@@ -23,7 +23,7 @@ jobs:
       - name: Mapping repositories 🗺️
         id: read-json
         run: |
-          json_content=$(cat teams.json)
+          json_content=$(cat repositories.json)
           echo "::set-output name=json_content::$json_content"
 
       
