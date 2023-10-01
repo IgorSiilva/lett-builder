@@ -1,0 +1,18 @@
+name: Constructor Unit
+run-name: ${{ github.event.client_payload.creator_username }} has spawned a new constructor unit 🔨
+
+on:
+  repository_dispatch:
+    types:
+      - new_repository_created
+
+
+jobs:
+  process:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Processar ação
+        run: |
+          echo "Novo repositório criado: ${{ github.event.client_payload.repository_name }}"
+          echo "Informações adicionais: ${{ github.event.client_payload.additional_info }}"
+        # Adicione a lógica necessária aqui.
