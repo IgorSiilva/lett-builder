@@ -11,8 +11,40 @@ jobs:
   process:
     runs-on: ubuntu-latest
     steps:
-      - name: Processar ação
+      - name: Checkout do código
+        uses: actions/checkout@v2
+        #with:
+        #  repository: 'lettdigital/terraform-team-web'
+        #  ref: 'main'
+        #  path: terraform-directory
+        #  token: ${{ secrets.MY_GITHUB_TOKEN }}
+        #uses: actions/checkout@v2
+
+      - name: Mapping repositories 🗺️
+        id: read-json
         run: |
-          echo "Novo repositório criado: ${{ github.event.client_payload.repository_name }}"
-          echo "Informações adicionais: ${{ github.event.client_payload.additional_info }}"
-        # Adicione a lógica necessária aqui.
+          json_content=$(cat teams.json)
+          echo "::set-output name=json_content::$json_content"
+
+      
+      - name: Searching for Terraform Repo 🔎
+        id: find-terraform-repo
+        run: |
+          json_data=${{ steps.read-json.outputs.json_content }}
+          tag_to_find="${{ github.event.client_payload.tags.team }}"
+
+          repo=""
+
+          for row in $(echo "${json_data}" | jq -r '.[] | @base64'); do
+            _jq() {
+              echo ${row} | base64 --decode | jq -r ${1}
+            }
+
+            tag=$(_jq '.tag')
+            if [[ "${tag}" == "${tag_to_find}" ]]; then
+              repo=$(_jq '.repo')
+              break
+            fi
+          done
+
+          echo "::set-output name=terraform_repo::${repo}"
