@@ -30,9 +30,9 @@ jobs:
         id: find-terraform-repo
         run: |
           tag_to_find="${{ github.event.client_payload.tags.team }}"
+          echo "{repositories}=${repositories}" >> "$GITHUB_OUTPUT"
+          echo "{tag_to_find}=${tag_to_find}" >> "$GITHUB_OUTPUT"
 
-          echo ${repositories}
-          echo ${tag_to_find}
 
           repo=""
 
