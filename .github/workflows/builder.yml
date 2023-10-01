@@ -25,6 +25,18 @@ jobs:
         run: |
           json_content=$(cat repositories.json)
           echo "{repositories}={json_content}" >> $GITHUB_STATE
+
+      - name: Debugging
+        run: |
+          echo "Debugging information:"
+          echo "Repositories: $repositories"
+          echo "Tag to Find: $tag_to_find"
+
+          # Use core.debug para mensagens de depuração
+          echo "::debug::Debug message: This is a debug message"
+        env:
+          repositories: ${{ steps.read-json.outputs.repositories }}
+          tag_to_find: ${{ github.event.client_payload.tags.team }}
       
       - name: Searching for Terraform Repo 🔎
         id: find-terraform-repo
