@@ -28,11 +28,11 @@ jobs:
 
       - name: Debugging
         run: |
-          printf "%s\n" "$repositories"
-        
+          infrastructure_requirements=${{toJSON(github.event.client_payload.infrastructure_requirements)}}        
           echo "Debugging information:"
           echo "Repositories: $REPOSITORIES"
-          echo ${{ github.event.client_payload.infrastructure_requirements }}
+          echo "Infrastructure Requirements JSON:"
+          echo "$json"
 
 
           # Use core.debug para mensagens de depuração
