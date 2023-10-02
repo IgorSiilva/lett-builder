@@ -26,15 +26,17 @@ jobs:
           json_content=$(cat repositories.json | jq -c .)
           echo "REPOSITORIES"=$json_content >> "$GITHUB_ENV"
 
+          
+
       - name: Debugging
         run: |
-          infrastructure_requirements=${{toJSON(github.event.client_payload.infrastructure_requirements)}}        
+                
           echo "Debugging information:"
           echo "Repositories: $REPOSITORIES"
           echo "Infrastructure Requirements JSON:"
-          echo "$json"
+          #echo "$json"
 
-
+          #infrastructure_requirements=${{toJSON(github.event.client_payload.infrastructure_requirements)}}  
           # Use core.debug para mensagens de depuração
           echo "::debug::Debug message: This is a debug message"
       
