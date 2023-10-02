@@ -30,16 +30,15 @@ jobs:
 
       - name: Debugging
         run: |
-                
           echo "Debugging information:"
           echo "Repositories: $REPOSITORIES"
           echo "Infrastructure Requirements JSON:"
-          #echo "$json"
+          
+          echo "::debug::Debug message: This is a debug message"
+  #echo "$json"
 
           #infrastructure_requirements=${{toJSON(github.event.client_payload.infrastructure_requirements)}}  
-          # Use core.debug para mensagens de depuração
-          echo "::debug::Debug message: This is a debug message"
-      
+          # Use core.debug para mensagens de depuração    
     #  - name: Searching for Terraform Repo 🔎
     #    id: find-terraform-repo
     #    run: |
