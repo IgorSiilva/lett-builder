@@ -39,7 +39,7 @@ jobs:
           echo "::debug::Debug message: This is a debug message"
         env:
           repositories: ${{ steps.read-json.outputs.repositories }}
-          tag_to_find: ${{ github.event.client_payload.tags.team }}
+          tag_to_find: ${{ github.event.client_payload }}
       
     #  - name: Searching for Terraform Repo 🔎
     #    id: find-terraform-repo
