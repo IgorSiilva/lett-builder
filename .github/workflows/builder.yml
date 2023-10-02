@@ -24,13 +24,17 @@ jobs:
         id: read-json
         run: |
           json_content=$(cat repositories.json)
+          printf "%s\n" "$json_content"
           echo "{repositories}={json_content}" >> $GITHUB_STATE
 
       - name: Debugging
         run: |
+          printf "%s\n" "$repositories"
+        
           echo "Debugging information:"
           echo "Repositories: $repositories"
           echo "Tag to Find: $tag_to_find"
+
 
           # Use core.debug para mensagens de depuração
           echo "::debug::Debug message: This is a debug message"
@@ -38,26 +42,26 @@ jobs:
           repositories: ${{ steps.read-json.outputs.repositories }}
           tag_to_find: ${{ github.event.client_payload.tags.team }}
       
-      - name: Searching for Terraform Repo 🔎
-        id: find-terraform-repo
-        run: |
-          tag_to_find="${{ github.event.client_payload.tags.team }}"
-          echo "{repositories}=${repositories}" >> "$GITHUB_OUTPUT"
-          echo "{tag_to_find}=${tag_to_find}" >> "$GITHUB_OUTPUT"
+    #  - name: Searching for Terraform Repo 🔎
+    #    id: find-terraform-repo
+    #    run: |
+    #      tag_to_find="${{ github.event.client_payload.tags.team }}"
+    #      echo "{repositories}=${repositories}" >> "$GITHUB_OUTPUT"
+    #      echo "{tag_to_find}=${tag_to_find}" >> "$GITHUB_OUTPUT"
+    #
 
+     #     repo=""
 
-          repo=""
+     #     for row in $(echo "${repositories}" | jq -r '.[] | @base64'); do
+     #       _jq() {
+     #         echo ${row} | base64 --decode | jq -r ${1}
+     #       }
 
-          for row in $(echo "${repositories}" | jq -r '.[] | @base64'); do
-            _jq() {
-              echo ${row} | base64 --decode | jq -r ${1}
-            }
+     #       tag=$(_jq '.tag')
+     #       if [[ "${tag}" == "${tag_to_find}" ]]; then
+     #         repo=$(_jq '.repo')
+     #         break
+     #       fi
+     #     done
 
-            tag=$(_jq '.tag')
-            if [[ "${tag}" == "${tag_to_find}" ]]; then
-              repo=$(_jq '.repo')
-              break
-            fi
-          done
-
-          echo "::set-output name=terraform_repo::${repo}"
+      #    echo "::set-output name=terraform_repo::${repo}"
