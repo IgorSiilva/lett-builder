@@ -35,6 +35,7 @@ jobs:
           echo "Infrastructure Requirements JSON:"
           
           infrastructure_requirements="${{github.event.client_payload.infrastructure_requirements}}"
+          echo "$infrastructure_requirements"   
           echo "$infrastructure_requirements" | jq '.'    
           echo "::debug::Debug message: This is a debug message"
   #echo "$json"
