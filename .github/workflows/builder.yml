@@ -23,16 +23,15 @@ jobs:
       - name: Mapping repositories 🗺️
         id: read-json
         run: |
-          json_content=$(cat repositories.json)
-          printf "%s\n" "$json_content"
-          echo "{repositories}={json_content}" >> $GITHUB_STATE
+          json_content=$(cat repositories.json | jq -c .)
+          echo "REPOSITORIES"=$json_content >> "$GITHUB_ENV"
 
       - name: Debugging
         run: |
           printf "%s\n" "$repositories"
         
           echo "Debugging information:"
-          echo "Repositories: $repositories"
+          echo "Repositories: $REPOSITORIES"
           echo "Tag to Find: $tag_to_find"
 
 
