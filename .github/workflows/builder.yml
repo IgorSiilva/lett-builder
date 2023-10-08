@@ -6,57 +6,51 @@ on:
     types:
       - new_repository_created
 
-
 jobs:
   process:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout do código
         uses: actions/checkout@v2
-        #with:
-        #  repository: 'lettdigital/terraform-team-web'
-        #  ref: 'main'
-        #  path: terraform-directory
-        #  token: ${{ secrets.MY_GITHUB_TOKEN }}
-        #uses: actions/checkout@v2
 
       - name: Mapping repositories 🗺️
         id: read-json
         run: |
           json_content=$(cat repositories.json | jq -c .)
-          echo "REPOSITORIES"=$json_content >> "$GITHUB_ENV"
-
-          
+          echo "REPOSITORIES=$json_content" >> "$GITHUB_ENV"
 
       - name: Print Payload Information
         run: |
           echo "Creator Username: ${{ github.event.client_payload.creator_username }}"
           echo "Repository Name: ${{ github.event.client_payload.repository_name }}"
           echo "Infrastructure Requirements: ${{ github.event.client_payload.infrastructure_requirements }}"
-  #echo "$json"
 
-          #infrastructure_requirements=${{toJSON(github.event.client_payload.infrastructure_requirements)}}  
-          # Use core.debug para mensagens de depuração    
-    #  - name: Searching for Terraform Repo 🔎
-    #    id: find-terraform-repo
-    #    run: |
-    #      tag_to_find="${{ github.event.client_payload.tags.team }}"
-    #      echo "{repositories}=${repositories}" >> "$GITHUB_OUTPUT"
-    #      echo "{tag_to_find}=${tag_to_find}" >> "$GITHUB_OUTPUT"
-    #
+      - name: Searching for Terraform Repo 🔎
+        id: find-terraform-repo
+        run: |
+          tag_to_find=$(echo "${{ github.event.client_payload.infrastructure_requirements }}" | jq -r '.tags.team')
+          repo=$(jq -rc --arg tag "$tag_to_find" '.[] | select(.tag == $tag) | .repo' repositories.json)
 
-     #     repo=""
+          if [ -z "$repo" ]; then
+            echo "No repository found for tag: $tag_to_find"
+            exit 1
+          fi
 
-     #     for row in $(echo "${repositories}" | jq -r '.[] | @base64'); do
-     #       _jq() {
-     #         echo ${row} | base64 --decode | jq -r ${1}
-     #       }
+          echo "Repository found: $repo"
+          echo "REPO=$repo" >> "$GITHUB_ENV"
 
-     #       tag=$(_jq '.tag')
-     #       if [[ "${tag}" == "${tag_to_find}" ]]; then
-     #         repo=$(_jq '.repo')
-     #         break
-     #       fi
-     #     done
 
-      #    echo "::set-output name=terraform_repo::${repo}"
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.MY_GITHUB_TOKEN }}
+          commit-message: Add infrastructure requirements
+          title: Add infrastructure requirements
+          body: |
+            Infrastructure requirements:
+            ```json
+            ${{ github.event.client_payload.infrastructure_requirements }}
+            ```
+          base: main
+          branch: add-infrastructure-requirements-${{ github.event.client_payload.repository_name }}
+          path: ${{ env.REPO }}
