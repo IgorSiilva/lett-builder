@@ -2,5 +2,9 @@
     {
         "tag": "web",
         "repo": "lettdigital/terraform-team-web"
+    },
+    {
+        "tag": "dataops",
+        "repo": "lettdigital/terraform-dataops-aws"
     }
 ]
