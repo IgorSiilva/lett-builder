@@ -28,16 +28,11 @@ jobs:
 
           
 
-      - name: Debugging
+      - name: Print Payload Information
         run: |
-          echo "Debugging information:"
-          echo "Repositories: $REPOSITORIES"
-          echo "Infrastructure Requirements JSON:"
-          
-          infrastructure_requirements="${{github.event.client_payload.infrastructure_requirements}}"
-          echo "$infrastructure_requirements"   
-          echo "$infrastructure_requirements" | jq '.'    
-          echo "::debug::Debug message: This is a debug message"
+          echo "Creator Username: ${{ github.event.client_payload.creator_username }}"
+          echo "Repository Name: ${{ github.event.client_payload.repository_name }}"
+          echo "Infrastructure Requirements: ${{ github.event.client_payload.infrastructure_requirements }}"
   #echo "$json"
 
           #infrastructure_requirements=${{toJSON(github.event.client_payload.infrastructure_requirements)}}  
