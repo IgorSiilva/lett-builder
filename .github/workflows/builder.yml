@@ -40,17 +40,15 @@ jobs:
           echo "REPO=$repo" >> "$GITHUB_ENV"
 
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v3
+      - name: Create Pull Request in the Found Repository
+        uses: repo-sync/pull-request@v2
         with:
-          token: ${{ secrets.MY_GITHUB_TOKEN }}
-          commit-message: Add infrastructure requirements
-          title: Add infrastructure requirements
-          body: |
-            Infrastructure requirements:
+          destination_branch: "main"
+          pr_title: "Add New Infrastructure Requirements"
+          pr_body: |
+            New infrastructure requirements:
             ```json
             ${{ github.event.client_payload.infrastructure_requirements }}
             ```
-          base: main
-          branch: add-infrastructure-requirements-${{ github.event.client_payload.repository_name }}
-          path: ${{ env.REPO }}
+          github_token: ${{ secrets.MY_GITHUB_TOKEN }}
+          repository: ${{ env.REPO }}
