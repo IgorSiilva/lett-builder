@@ -28,7 +28,7 @@ jobs:
       - name: Searching for Terraform Repo 🔎
         id: find-terraform-repo
         run: |
-          tag_to_find=$(echo "${{ github.event.client_payload.infrastructure_requirements }}" | jq -r '.tags.team')
+          tag_to_find=$(echo '${{ github.event.client_payload.infrastructure_requirements }}' | jq -r '.tags.team')
           repo=$(jq -rc --arg tag "$tag_to_find" '.[] | select(.tag == $tag) | .repo' repositories.json)
 
           if [ -z "$repo" ]; then
